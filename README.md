@@ -1,7 +1,8 @@
 #	ENSE 799 - Master's thesis
-##	Amar Vamsi Krishna - UID : 114921871
-##	University of Maryland, College Park
-###	Advisor : Dr. Anindo Roy
+##	Lead Developer	:	Amar Vamsi Krishna - UID : 114921871
+###	University of Maryland, College Park
+##	Collaborator	:	Suchitra Chandar
+##	Advisor : Dr. Anindo Roy
 ###	Date : 25th October, 2017
 ####	Topic : Development of a novel interactive visual task for robot assisted gait training in stroke
 ####	Task 2.1: Programming - Create a Video game - create a screen cursor and visual environment
