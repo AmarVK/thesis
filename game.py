@@ -11,24 +11,44 @@
 
 import pygame	
 
-pygame.init()										#	Initialize all imported pygame - modules (pygame constructor) 
-gameDisplay = pygame.display.set_mode((800,600))	#	Initialize a window or screen for display
-pygame.display.set_caption('Game On!')				#	Set the current window caption
-clock = pygame.time.Clock()							#	Create an object - 'clock' to help track time
+display_width = 800														#	Set display screen width	
+display_height = 600													#	Set display screen height
 
-crashed = False										#	Initialize the boolean - 'crashed' to false 	
+#	Initialize colors
+black = (0,0,0)
+white = (255,255,255)
+red = (255,0,0)
+green = (0,255,0)
+blue = (0,0,255)
+
+pygame.init()															#	Initialize all imported pygame - modules (pygame constructor) 
+gameDisplay = pygame.display.set_mode((display_width,display_height))	#	Initialize a window or screen for display
+pygame.display.set_caption('Game On!')									#	Set the current window caption
+clock = pygame.time.Clock()												#	Create an object - 'clock' to help track time
+
+ballImg = pygame.image.load('/home/amarvk/projects/thesis/football.png')								#	Importing the football image into the game
+
+def ball(x,y):															#	Creating a function - ball that displays the ball on given coordinates
+	gameDisplay.blit(ballImg,(x,y))
+
+x = (display_width * 0.45)												#	Setting the values of position of the ball
+y = (display_height*0.6)
+
+crashed = False															#	Initialize the boolean - 'crashed' to false 	
 
 #	The game loop logic runs as long as there is no crash
 
-while not crashed:									#	The game loop begins
+while not crashed:														#	The game loop begins
         
-    for event in pygame.event.get():				#	Gets all the events from the game
-        if event.type == pygame.QUIT:				#	If the event is 'pygame.QUIT' - pressing of the 'X' button on the display window, the boolean crashed is flagged to a true value
+    for event in pygame.event.get():									#	Gets all the events from the game
+        if event.type == pygame.QUIT:									#	If the event is 'pygame.QUIT' - pressing of the 'X' button on the display window, the boolean crashed is flagged to a true value
             crashed = True							
         
-        print event 								#	Displays the event log on the terminal screen
-        pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(60)								#	Max framerate of the game
+	gameDisplay.fill(green)												#	Background color 
+	ball(x,y)															#	Display the ball
 
-pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
-quit()												#	Quit Python
+    pygame.display.update()												#	Updates the display screen only in the places where the event has changed
+    clock.tick(60)														#	Max framerate of the game
+
+pygame.quit()															#	Unitialize all pygame modules (pygame destructor)
+quit()																	#	Quit Python
