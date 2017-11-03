@@ -69,7 +69,7 @@ while not crashed:														#	The game loop begins
 	gameDisplay.blit(goalImg,(270,0))
 	ball(x,y)
 
-	#print event
+	print event
 	pygame.display.update()												#	Updates the display screen only in the places where the event has changed
 	clock.tick(60)														#	Max framerate of the game
 
