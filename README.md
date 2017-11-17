@@ -7,8 +7,8 @@
 ####	Topic : Development of a novel interactive visual task for robot assisted gait training in stroke
 ####	Task 2.1: Programming - Create a Video game - create a screen cursor and visual environment
 ####	Version-1 : Creating a window using pygame and displaying the events (Keyboard presses and mouse movements) on the terminal window
-####	Configuration and Dependancies - Uses python version2.7.12 and pygame version 1.9.3. Currently using Spyder IDE and Sublime Text editor for development
-####	Source for the tutorial : https://pythonprogramming.net/pygame-python-3-part-1-intro/
+####	Configuration and Dependancies - Uses python version2.7.1, pygame version 1.9.3 Tk interface module called Tkinter version 8.6. Currently using Spyder IDE and Sublime Text editor for development
+
 Development of a Novel Interactive Visual Task for Robot-Assisted Gait Training in Stroke
 
 This project forms a part of the Masters Thesis of Amar Vamsi Krishna, in collaboration with Suchitra Chandar. 
