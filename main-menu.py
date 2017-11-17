@@ -10,6 +10,7 @@ Created on Thu Nov 16 13:59:27 2017
 # =============================================================================
 from Tkinter import *
 import numpy as np
+import os
 # =============================================================================
 # Deffine Fonts
 # =============================================================================
@@ -82,6 +83,7 @@ def gameAction():
     alpha = float(input1entry.get())
     tau = float(input2entry.get())
     print cb_val1.get(), cb_val2.get(), cb_val3.get(), cb_val4.get()
+    os.system('python working_code.py')
     
 gameButton = Button(window, text = game_button, command =lambda: gameAction()).grid (row = 8,column = 0, columnspan =2)
 # =============================================================================
