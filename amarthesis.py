@@ -10,7 +10,9 @@
 #	Source for the tutorial : https://pythonprogramming.net/pygame-python-3-part-1-intro/
 
 import pygame, eztext
-import xlrd	
+import xlrd
+from scipy import stats
+import numpy as np	
 
 pygame.init()										#	Initialize all imported pygame - modules (pygame constructor) 
 
@@ -150,8 +152,10 @@ def game_loop():
     x =  42                 #   Field x position
     y = 50                  #   Field y position
     L = 250                 #   Initial Start position
-    Lmax = 250              #   Max start positiom
+    Lmax = 400              #   Max start positiom
     Lmin = 50               #   Min start position position
+    deltaL = 0               #   actual pixel offset for machine learning
+    beta = 50               #   Default pixel offset
     linex = x               #   Start-line x position (same as field)
     liney = L               #   Initial Start-line y position (same as Start position)
     x1 = 376                #   Initial Ball x position (center of the field)
@@ -173,6 +177,7 @@ def game_loop():
     print(gait_cycle+1)
     sample_size = 5         #   Setting the window size for machine learning
     max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
+    index = [0]*sample_size 
     flag = True             #   Used to detect change in gait_cycle
     average_torque = 0      # Initializing average torque value for machine learning
     crashed = False         #	Initialize the boolean - 'crashed' to false
@@ -191,6 +196,7 @@ def game_loop():
                 
         read_value = torque[count]
         count += 1
+        index[gait_cycle] = gait_cycle + 1
         if flag == False:           #   Swing phase: no ball movement
             prev_value = 0          #   New gait_cycle detected; set max torque value to zero
             if footswitch[count] != 0:          #   Wait for stance phase 
@@ -205,24 +211,48 @@ def game_loop():
                 if gait_cycle < sample_size: print(gait_cycle+1)
             if gait_cycle < sample_size:
                 max_torque[gait_cycle] = prev_value            #   save max_torque for gait_cycle < sample size
+                index[gait_cycle] = gait_cycle + 1
             else:
-                #   Compare last sample with the average of the rest and decide improvement and declining
-                average_torque = sum(max_torque[:sample_size-1])/(sample_size-1)
-                if average_torque < max_torque[sample_size-1]:
-                    print('Improvement')
-                    L = L - 50
-                    if L < Lmin:
-                        L = Lmin
-                elif average_torque > max_torque[sample_size-1]:
-                    print('Decline')
-                    L = L + 50
-                    if L > Lmax:
-                        L = Lmax
-                elif average_torque == max_torque[sample_size-1]:
-                    L = L
-                gait_cycle = 0                      #   Reset gait_cycle
-                print(gait_cycle+1)
-                max_torque = [0]*sample_size        #   Reset max_torque
+#                #   Compare last sample with the average of the rest and decide improvement and declining
+#                average_torque = sum(max_torque[:sample_size-1])/(sample_size-1)
+#                R = (max_torque[sample_size-1]/average_torque)
+#                if average_torque < max_torque[sample_size-1]:
+#                    print('Improvement')
+#                    deltaL = beta*R
+#                    print(deltaL)
+#                    L = L - deltaL
+#                    if L < Lmin:
+#                        L = Lmin
+#                elif average_torque > max_torque[sample_size-1]:
+#                    print('Decline')
+#                    deltaL = beta*R
+#                    print(deltaL)
+#                    L = L + deltaL
+#                    if L > Lmax:
+#                        L = Lmax
+#                elif average_torque == max_torque[sample_size-1]:
+#                    L = L
+                 slope, intercept, r_value, p_value, std_err = stats.linregress(index,max_torque)
+                 print(r_value)
+                 if r_value > 0:
+                     print('Improvement')
+                     deltaL = beta*r_value
+                     print(deltaL)
+                     L = L - deltaL
+                     if L < Lmin:
+                         L = Lmin
+                 elif r_value < 0:
+                     print('Decline')
+                     deltaL = beta*r_value
+                     print(deltaL)
+                     L = L - deltaL
+                     if L > Lmax:
+                         L = Lmax
+                 gait_cycle = 0                      #   Reset gait_cycle
+                 print(gait_cycle+1)
+                 index = [0]*sample_size
+                 index[gait_cycle] = gait_cycle + 1
+                 max_torque = [0]*sample_size        #   Reset max_torque
         #   Update y position of ball & start line and power bar height
         y1 = L + alpha_sens*prev_value
         y1actual = L + alpha_sens*read_value
