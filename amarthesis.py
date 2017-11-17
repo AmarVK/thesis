@@ -64,7 +64,7 @@ def kickpower(power):
     screen.blit(kickmeter,(30,10))
 
 #   Extracting torque data from the excel file
-file_location = "./data/Robot_data1.xlsx"
+file_location = "/home/amarvk/projects/thesis/data/Robot_Data1.xlsx"
 workbook = xlrd.open_workbook(file_location)
 sheet = workbook.sheet_by_name('Trial 1')
 #   Extracting Column 7 from the sheet
