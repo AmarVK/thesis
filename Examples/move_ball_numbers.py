@@ -25,14 +25,14 @@ pygame.display.set_caption('Game On!')				#	Set the current window caption
 clock = pygame.time.Clock()							#	Create an object - 'clock' to help track time
 
 #   Football field Background
-fieldimg = pygame.image.load('./data/field.png')
+fieldimg = pygame.image.load('./images/field.png')
 fieldimg = pygame.transform.scale(fieldimg, (716, 500))
 
 # Goal image
-goalimg = pygame.image.load('./data/goal.png')
+goalimg = pygame.image.load('./images/goal.png')
 
 #Ball image
-ballimg = pygame.image.load('./data/ball.png')
+ballimg = pygame.image.load('./images/ball.png')
 ballimg = pygame.transform.scale(ballimg, (50, 50))
 
 def field(x,y):
@@ -63,7 +63,7 @@ bar_hchange = 50
 bar_max = 0
 
 def kickpower(power_count):
-    font = pygame.font.Font('./data/font.ttf', 40)
+    font = pygame.font.Font('./fonts/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
     text = font.render("Power: "+str(power_count)+ "%", True, white)
     screen.blit(text,(600,10))
