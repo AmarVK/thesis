@@ -14,9 +14,19 @@ Development of a Novel Interactive Visual Task for Robot-Assisted Gait Training 
 This project forms a part of the Masters Thesis of Amar Vamsi Krishna, in collaboration with Suchitra Chandar. 
 Advised by Prof Anindo Roy
 
-The folder "Examples" contains simple example scripts that can be seen to understand simple pygame/tkinter functinalities. 
+There are two game files
+
+main-menu.py has a main menu interface which can take in the values of sensitivity, threshold torque, level progression parameters etc
+the game.py contains the source code of the game file
+
+The folder "examples" contains simple example scripts that can be seen to understand simple pygame/tkinter functinalities. 
 The folder "fonts" contains the different fonts that would be used in the project
 The folder "images" contains the different images used as objects, blits and background
+The folder "ankle-data" contains the clinical data of the overground trials using the anklebot
+the folder "audio" contains the audio files for the program
+the folder "inc" contains various python modules that could be imported
+the folder "material" ccontains reading material for the project - currently contains information about TCP/IP and Tkinter
+the folder "utils" contains the various other files that can act as utilities. Currently contains a python script that can extract torque data from a text file
 
 To understand the Examples, open the folder and see the readme text file inside. 
 

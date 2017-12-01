@@ -12,3 +12,9 @@ A small summary of each of the programs in this folder and what they do :
 	This program opens a pygame window with a goal post, ball and the field markings. This program displays a ball that can move between 0-100% of the designated screen space to reach the goal. In order to run this, place the images in the "images' folder in the root directory. Use the numbers on the keyboard to move the ball. 
 0	- 0% of the max power
 100	- 100% of the max power 
+
+4. tkinter_pygame.py
+	This program opens a pygame embedded inside of a tkinter module.
+ 
+5. read_from_text.py
+	This program reads torque values from the test_array.txt file in the same folder. It converts this into an array and performs the football movement on the field as per the torque values

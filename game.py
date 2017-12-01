@@ -29,13 +29,13 @@ clock = pygame.time.Clock()						           	#	Create an object - 'clock' to hel
 
 def display_rudiments(liney,y1,action):
     #   Football field image
-    fieldimg = pygame.image.load('./data/field.png')               #   load image from data folder
+    fieldimg = pygame.image.load('./images/field.png')               #   load image from data folder
     fieldimg = pygame.transform.scale(fieldimg, (716, 500))        #   scale image by pixels
     #Ball image
-    ballimg = pygame.image.load('./data/ball.png')
+    ballimg = pygame.image.load('./images/ball.png')
     ballimg = pygame.transform.scale(ballimg, (50, 50))
     # Goal image
-    goalimg = pygame.image.load('./data/goal.png')
+    goalimg = pygame.image.load('./images/goal.png')
     
     x =  42                 #   Field x position
     y = 50                  #   Field y position
@@ -84,7 +84,7 @@ def startline(linex, liney, linew, lineh):
 
 #   Defining kickpower as an object with power input to display the kick power on the top right corner of the window
 def kickpower(score):
-    font = pygame.font.Font('./data/font.ttf', 40)
+    font = pygame.font.Font('./fonts/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
     text = font.render("Score: "+str(score), True, white)
     screen.blit(text,(680,10))
@@ -108,14 +108,14 @@ def button(msg,x,y,w,h,ic,ac,action):
     else:
         pygame.draw.rect(screen, ic,(x,y,w,h))
 
-    smallText = pygame.font.Font('./data/font.ttf',20)
+    smallText = pygame.font.Font('./fonts/font.ttf',20)
     textSurf, textRect = text_objects(msg, smallText, black)
     textRect.center = ( (x+(w/2)), (y+(h/2)) )
     screen.blit(textSurf, textRect)
     
 def game_intro():
 
-    largeText = pygame.font.Font('./data/font.ttf',115)
+    largeText = pygame.font.Font('./fonts/font.ttf',115)
     TextSurf, TextRect = text_objects("Game On!", largeText, black)
     TextRect.center = ((800/2),200)
     intro = True
@@ -318,7 +318,7 @@ def game_loop(action):
         bar(barh,action)
         kickpower(score)
         if score == 10:
-            goaltext = pygame.font.Font('./data/font.ttf',50)
+            goaltext = pygame.font.Font('./fonts/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
