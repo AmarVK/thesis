@@ -16,19 +16,19 @@ gameDisplay = pygame.display.set_mode((800,600))	#	Initialize a window or screen
 pygame.display.set_caption('Game On!')				#	Set the current window caption
 clock = pygame.time.Clock()							#	Create an object - 'clock' to help track time
 
-crashed = False										#	Initialize the boolean - 'crashed' to false 	
+crashed = False									#	Initialize the boolean - 'crashed' to false 	
 
 #	The game loop logic runs as long as there is no crash
 
 while not crashed:									#	The game loop begins
         
-    for event in pygame.event.get():				#	Gets all the events from the game
-        if event.type == pygame.QUIT:				#	If the event is 'pygame.QUIT' - pressing of the 'X' button on the display window, the boolean crashed is flagged to a true value
+    for event in pygame.event.get():				    #	Gets all the events from the game
+        if event.type == pygame.QUIT:			    #	If the event is 'pygame.QUIT' - pressing of the 'X' button on the display window, the boolean crashed is flagged to a true value
             crashed = True							
         
-        print event 								#	Displays the event log on the terminal screen
-        pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(60)								#	Max framerate of the game
+        print event 							    #	Displays the event log on the terminal screen
+        pygame.display.update()					    #	Updates the display screen only in the places where the event has changed
+        clock.tick(60)							    #	Max framerate of the game
 
-pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
-quit()												#	Quit Python
+pygame.quit()									    #	Unitialize all pygame modules (pygame destructor)
+quit()										    #	Quit Python
