@@ -45,20 +45,20 @@ def display_rudiments(liney,y1,action):
     if action == "Dorsi":
         x2 =  300               #   Net x position
         y2 =  59                #   Net y position
-        fieldimg = pygame.transform.flip(fieldimg, False, True)            #   Flip field image
+        linew = 716             #   Start line width
+        lineh = 5               #   Start line height
+        fieldimg = pygame.transform.flip(fieldimg, False, True)          #   Flip field image
         goalimg = pygame.transform.flip(goalimg, False, True)            #   Flip field image
         screen.blit(fieldimg, (x,y))
-        linew = 716
-        lineh = 5
         startline(linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
     else:
         x2 =  300               #   Net x position
         y2 =  490               #   Net y position
+        linew = 716             #   Start line width
+        lineh = 5               #   Start line height
         screen.blit(fieldimg, (x,y))
-        linew = 716
-        lineh = 5
         startline(linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
@@ -105,6 +105,8 @@ def button(msg,x,y,w,h,ic,ac,action):
                 game_loop(action)
             elif action == "Plantar":
                 game_loop(action)
+            elif action == "Menu":
+                game_intro()
     else:
         pygame.draw.rect(screen, ic,(x,y,w,h))
 
@@ -168,6 +170,7 @@ def game_loop(action):
         Lmin = 100              #   Min start position position
         ymin = 67               #   Min y position of ball
         ymax = 488
+        flag = False             #   Used to detect change in gait_cycle
                 
     elif action == "Plantar":
         #   Extracting torque data from the excel file
@@ -189,11 +192,13 @@ def game_loop(action):
             if footswitch[i] < 0.3:
                 torque[i] = 0
                 footswitch[i] = 0
+            else: footswitch[i] = 1
         
         L = 250                 #   Initial Start position
         Lmax = 400              #   Max start positiom
         Lmin = 50               #   Min start position position
         ymax = 488              #   Max y position of ball
+        flag = True             #   Used to detect change in gait_cycle
         
         
     deltaL = 0              #   actual pixel offset for machine learning
@@ -212,7 +217,6 @@ def game_loop(action):
     max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
     index = [0]*sample_size 
     score = 0
-    flag = True             #   Used to detect change in gait_cycle
     crashed = False         #	Initialize the boolean - 'crashed' to false
     while not crashed:									#	The game loop begins
             
@@ -222,13 +226,10 @@ def game_loop(action):
                 pygame.quit()
                 quit()
                 
-            if count == tlength-1:
-                crashed = True
-                pygame.quit()
-                quit()  
-            print event
         read_value = torque[count]
         count += 1
+        if count == tlength:
+            game_intro()
         index[gait_cycle] = gait_cycle + 1
         if flag == False:           #   Phase not under consideration: no ball movement
             prev_value = 0          #   New gait_cycle detected; set max torque value to zero
@@ -322,6 +323,7 @@ def game_loop(action):
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
+        button("Main Menu",675,560,100,30,red,bright_red,"Menu")
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
         clock.tick(200)								#	Max framerate of the game
     
