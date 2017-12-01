@@ -34,26 +34,11 @@ sheet = workbook.sheet_by_name('Trial 1')
 #   Extracting Column 7 from the sheet
 torque = sheet.col_values(6)
 footswitch = sheet.col_values(19)
-
-# =============================================================================
-# Extracting meaningful torque inputs
-# =============================================================================
-#   Extracting meaningful values of torque
-tlength = len(torque)
-for i in range(0,tlength):
-    if torque[i] > 0:
-        torque[i] = 0.00
-    else:
-        torque[i] = (-1)*torque[i]
-for i in range(0,tlength):
-    if footswitch[i] < 0.3:
-        torque[i] = 0
-        footswitch[i] = 0
-
 alpha = 0
 tau = 0
 beta = 0
 n = 0
+
 
 def gameAction():
     global alpha
@@ -90,6 +75,23 @@ def mlParams():
     
     input3Text2 = Label(window,text = input5, font = FONT).grid(row=8, column =1, sticky=W)
     input3entry2.grid(row=9, column =1, sticky=W)
+    
+# =============================================================================
+# Extracting meaningful torque inputs
+# =============================================================================
+#   Extracting meaningful values of torque
+tlength = len(torque)
+for i in range(0,tlength):
+    if torque[i] > -tau:
+        torque[i] = 0.00
+    else:
+        torque[i] = (-1)*torque[i]
+for i in range(0,tlength):
+    if footswitch[i] < 0.3:
+        torque[i] = 0
+        footswitch[i] = 0
+
+
 
 def game_loop():
     x =  42                 #   Field x position
@@ -118,7 +120,7 @@ def game_loop():
     print(gait_cycle+1)
     sample_size = n         #   Setting the window size for machine learning
     print sample_size
-    max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
+    max_torque = [0]            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
     flag = True             #   Used to detect change in gait_cycle
     average_torque = 0      # Initializing average torque value for machine learning
     crashed = False         #	Initialize the boolean - 'crashed' to false
@@ -229,9 +231,9 @@ header_text = """Penalty Shooter Game !
 Robot Assisted Soccer Game"""
 input1 = """Sensitivity (pixels/Nm)"""
 input2 = """Threshold (Nm)"""
-input3 = """Default Pixel Offset"""
+input3 = """Pixel increment"""
 input4 = """Machine Learning"""
-input5 = """Window Size"""
+input5 = """Number of Cycles"""
 checkbox1 = """None"""
 checkbox2 = """Average"""
 checkbox3 = """Regression"""

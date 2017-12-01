@@ -1,30 +1,30 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 10 14:58:22 2017
-
-@author: amarvk
-"""
-
 import pygame
-import main-menu 
+import Tkinter as tk
+from Tkinter import *
+import os
 
-class App:
-    def __init__(self):
-        self.running = True
-        self._display_surf = None
-        self.size = self.weight, self.height = 640,400
-        
-    def on_init(self):
-        pygame.init()
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DUBLEBUF)
-        self._running = True
-            
-    def on_execute(self):
-        pass
-    
-if __name__ == "__main__":
-    theApp = App()
-    theApp.on_init()
-    theApp.on_execute()
+root = tk.Tk()
+embed = tk.Frame(root, width = 500, height = 500) #creates embed frame for pygame window
+embed.grid(columnspan = (600), rowspan = 500) # Adds grid
+embed.pack(side = LEFT) #packs window to the left
+buttonwin = tk.Frame(root, width = 75, height = 500)
+buttonwin.pack(side = LEFT)
+os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
+# =============================================================================
+# os.environ['SDL_VIDEODRIVER'] = 'windib'
+# =============================================================================
+screen = pygame.display.set_mode((500,500))
+screen.fill(pygame.Color(255,255,255))
+pygame.display.init()
+pygame.display.update()
+def draw():
+    pygame.draw.circle(screen, (0,0,0), (250,250), 125)
+    pygame.display.update()
+    button1 = Button(buttonwin,text = 'Draw',  command=draw)
+    button1.pack(side=LEFT)
+    root.update()
+
+while True:
+    pygame.display.update()
+    root.update()   
     

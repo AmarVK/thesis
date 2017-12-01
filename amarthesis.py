@@ -142,7 +142,7 @@ def game_intro():
         button("Start",150,450,100,50,green,bright_green,"play")
         button("Exit",550,450,100,50,red,bright_red,"quit")    
 
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(15)
         
 #	The game loop logic runs as long as there is no crash
@@ -242,4 +242,4 @@ def game_loop():
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()												#	Quit Python
-game_intro()
+game_loop()
