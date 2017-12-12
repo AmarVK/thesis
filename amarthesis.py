@@ -265,6 +265,7 @@ def game_loop(action):
 #                    L = L - deltaL
 #                    if L < Lmin:
 #                        L = Lmin
+#                        alpha_sens = 0.9*alpha_sens
 #                elif average_torque > max_torque[sample_size-1]:
 #                    print('Decline')
 #                    deltaL = beta*R
@@ -272,6 +273,7 @@ def game_loop(action):
 #                    L = L + deltaL
 #                    if L > Lmax:
 #                        L = Lmax
+#                        alpha_sens = 1.1*alpha_sens
 #                elif average_torque == max_torque[sample_size-1]:
 #                    L = L
                  slope, intercept, r_value, p_value, std_err = stats.linregress(index,max_torque)
@@ -283,6 +285,7 @@ def game_loop(action):
                      L = L - deltaL
                      if L < Lmin:
                          L = Lmin
+                         alpha_sens = 0.9*alpha_sens
                  elif r_value < 0:
                      print('Decline')
                      deltaL = beta*r_value
@@ -290,6 +293,7 @@ def game_loop(action):
                      L = L - deltaL
                      if L > Lmax:
                          L = Lmax
+                         alpha_sens = 1.1*alpha_sens
                  gait_cycle = 0                      #   Reset gait_cycle
                  print(gait_cycle+1)
                  index = [0]*sample_size
