@@ -27,15 +27,6 @@ window.geometry("500x470+0+0")                          #   Creating a screen x 
 # window.wm_iconbitmap('ball.xbm')                      #   TODO Fix this
 
 
-# =============================================================================
-# Extracting torque from excel
-# =============================================================================
-file_location = "/home/amarvk/projects/thesis/data/Robot_Data1.xlsx"
-workbook = xlrd.open_workbook(file_location)
-sheet = workbook.sheet_by_name('Trial 1')
-#   Extracting Column 7 from the sheet
-torque = sheet.col_values(6)
-footswitch = sheet.col_values(19)
 alpha = 0
 tau = 0
 beta = 0
@@ -117,6 +108,15 @@ def mlParams2():
     return avg
     
 # =============================================================================
+# Extracting torque from excel
+# =============================================================================
+file_location = "./data/Robot_Data1.xlsx"
+workbook = xlrd.open_workbook(file_location)
+sheet = workbook.sheet_by_name('Trial 1')
+#   Extracting Column 7 from the sheet
+torque = sheet.col_values(6)
+footswitch = sheet.col_values(19)
+# =============================================================================
 # Extracting meaningful torque inputs
 # =============================================================================
 #   Extracting meaningful values of torque
@@ -131,17 +131,34 @@ for i in range(0,tlength):
         torque[i] = 0
         footswitch[i] = 0
 
-
-
-def game_loop(action):
-    if action == "Dorsi":
-        #   Extracting torque data from the excel file
-        file_location = "./data/Robot_Data1.xlsx"
-        workbook = xlrd.open_workbook(file_location)
-        sheet = workbook.sheet_by_name('Trial 1')
-        #   Extracting Column 7 from the sheet
-        torque = sheet.col_values(6)
-        footswitch = sheet.col_values(19)
+def torque_extract(action):
+    
+#   Extracting torque data from the excel file
+    file_location = "./data/Robot_Data1.xlsx"
+    workbook = xlrd.open_workbook(file_location)
+    sheet = workbook.sheet_by_name('Trial 1')
+    #   Extracting Column 7 from the sheet
+    torque = sheet.col_values(6)
+    footswitch = sheet.col_values(19)
+        
+    if action == "Plantar":
+        
+        #   Extracting meaningful values of torque
+        tlength = len(torque)
+        for i in range(0,tlength):
+            if torque[i] > 0:
+                torque[i] = 0.00
+            else:
+                torque[i] = (-1)*torque[i]
+        for i in range(0,tlength):
+            if footswitch[i] < 0.3:
+                torque[i] = 0
+                footswitch[i] = 0
+            else: footswitch[i] = 1
+            
+        return torque, footswitch
+            
+    elif action == "Dorsi":
         
         #   Extracting meaningful values of torque
         tlength = len(torque)
@@ -157,46 +174,35 @@ def game_loop(action):
             else:
                 footswitch[i] = 1
                 
+        return torque, footswitch
+    
+def minmaxspecs(action):
+    if action == "Dorsi":
+                
         L = 300                 #   Initial Start position
-        Lmax = 550              #   Max start positiom
+        Lmax = 550              #   Max start position
         Lmin = 100              #   Min start position position
         ymin = 67               #   Min y position of ball
         ymax = 488
         flag = False             #   Used to detect change in gait_cycle
+        return L, Lmax, Lmin, ymin, ymax, flag
                 
     else:
-        #   Extracting torque data from the excel file
-        file_location = "./data/Robot_Data1.xlsx"
-        workbook = xlrd.open_workbook(file_location)
-        sheet = workbook.sheet_by_name('Trial 1')
-        #   Extracting Column 7 from the sheet
-        torque = sheet.col_values(6)
-        footswitch = sheet.col_values(19)
-        
-        #   Extracting meaningful values of torque
-        tlength = len(torque)
-        for i in range(0,tlength):
-            if torque[i] > 0:
-                torque[i] = 0.00
-            else:
-                torque[i] = (-1)*torque[i]
-        for i in range(0,tlength):
-            if footswitch[i] < 0.3:
-                torque[i] = 0
-                footswitch[i] = 0
-            else: footswitch[i] = 1
         
         L = 250                 #   Initial Start position
-        Lmax = 400              #   Max start positiom
+        Lmax = 400              #   Max start position
         Lmin = 50               #   Min start position position
+        ymin = 67               #   Min y position of ball
         ymax = 488              #   Max y position of ball
         flag = True             #   Used to detect change in gait_cycle
-        ymin =0
-        
+        return L, Lmax, Lmin, ymin, ymax, flag
+
+
+def game_loop(action):
+    torque, footswitch = torque_extract(action)
+    L, Lmax, Lmin, ymin, ymax, flag = minmaxspecs(action)
+    
     deltaL = 0              #   actual pixel offset for machine learning
-# =============================================================================
-#     beta =                #   Default pixel offset
-# =============================================================================
     liney = L               #   Initial Start-line y position (same as Start position)
     y1 = L                  #   Initial Ball y position (same as Initial Start position)
     y1actual = 0            #   Initial y value wrt torque profile
@@ -401,7 +407,7 @@ def plantar():
 # =============================================================================
 # Define text and photo inputs
 # =============================================================================
-logo = PhotoImage(file='/home/amarvk/projects/thesis/images/fire-soccer.gif')
+logo = PhotoImage(file='./images/fire-soccer.gif')
 header_text = """Penalty Shooter Game !
 Robot Assisted Soccer Game"""
 input1 = """Sensitivity (pixels/Nm)"""
@@ -423,7 +429,7 @@ Suchitra Chander
 Rahul Subramonian"""
 advisor = """Advisor:"""
 advisor_name = """Dr. Anindo Roy"""
-footer_image = PhotoImage(file='/home/amarvk/projects/thesis/images/umd.gif')
+footer_image = PhotoImage(file='./images/umd.gif')
 # =============================================================================
 # Setting up the grid UI
 # =============================================================================
@@ -491,8 +497,6 @@ clock = pygame.time.Clock()						           	#	Create an object - 'clock' to hel
 #   Football field image
 fieldimg = pygame.image.load('./data/field.png')               #   load image from data folder
 fieldimg = pygame.transform.scale(fieldimg, (716, 500))        #   scale image by pixels
-startlineimg = pygame.image.load('./data/startline.png')
-startlineimg = pygame.transform.scale(startlineimg,(716,76))
 #Ball image
 ballimg = pygame.image.load('./data/ball.png')
 ballimg = pygame.transform.scale(ballimg, (50, 50))
