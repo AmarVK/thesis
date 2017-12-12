@@ -83,11 +83,11 @@ def startline(linex, liney, linew, lineh):
     pygame.draw.rect(screen, red, [linex, liney, linew, lineh])
 
 #   Defining kickpower as an object with power input to display the kick power on the top right corner of the window
-def kickpower(score):
+def kickpower(total_score):
     font = pygame.font.Font('./data/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
-    text = font.render("Score: "+str(score), True, white)
-    screen.blit(text,(680,10))
+    text = font.render("Total Score: "+str(total_score), True, white)
+    screen.blit(text,(600,10))
     screen.blit(kickmeter,(30,10))
 
 def text_objects(text, font, color):
@@ -217,6 +217,9 @@ def game_loop(action):
     max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
     index = [0]*sample_size 
     score = 0
+    total_score = 0
+    score_display_max = 100
+    score_display = 0
     crashed = False         #	Initialize the boolean - 'crashed' to false
     while not crashed:									#	The game loop begins
             
@@ -232,16 +235,20 @@ def game_loop(action):
             game_intro()
         index[gait_cycle] = gait_cycle + 1
         if flag == False:           #   Phase not under consideration: no ball movement
-            prev_value = 0          #   New gait_cycle detected; set max torque value to zero
-            score = 0
+            score_display +=1
+            if score_display > score_display_max:
+                prev_value = 0          #   New gait_cycle detected; set max torque value to zero
+                score = 0
             if footswitch[count] != 0:          #   Wait for stance phase 
                 flag = True
         elif flag == True:          #   Phase under consideration
+            score_display = 0
             if read_value>prev_value:
                 prev_value = read_value
             if footswitch[count] == 0:          #   New gait cycle detected
                 flag = False
                 gait_cycle += 1
+                total_score = total_score + score
                 print(max_torque)
                 if gait_cycle < sample_size: print(gait_cycle+1)
             if gait_cycle < sample_size:
@@ -317,12 +324,17 @@ def game_loop(action):
         screen.fill(screencolor)
         display_rudiments(liney,y1,action)      						
         bar(barh,action)
-        kickpower(score)
+        kickpower(total_score)
         if score == 10:
             goaltext = pygame.font.Font('./data/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
+        if score_display < score_display_max and flag == False:
+            scoretext = pygame.font.Font('./data/font.ttf',70)
+            scoreSurf, scoreRect = text_objects("Score:" +str(score), scoretext, white)
+            scoreRect.center = ((800/2),200)
+            screen.blit(scoreSurf, scoreRect)
         button("Main Menu",675,560,100,30,red,bright_red,"Menu")
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
         clock.tick(200)								#	Max framerate of the game
