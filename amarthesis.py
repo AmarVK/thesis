@@ -138,7 +138,7 @@ def game_intro():
         button("Plantarflexion",550,450,100,50,red,bright_red,"Plantar")    
 
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(200)
         
 #	The game loop logic runs as long as there is no crash
 def game_loop(action):
@@ -341,7 +341,7 @@ def game_loop(action):
             screen.blit(scoreSurf, scoreRect)
         button("Main Menu",675,560,100,30,red,bright_red,"Menu")
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(200)								#	Max framerate of the game
+        clock.tick()								#	Max framerate of the game
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()												#	Quit Python
