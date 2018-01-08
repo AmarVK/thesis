@@ -45,20 +45,20 @@ def display_rudiments(liney,y1,action):
     if action == "Dorsi":
         x2 =  300               #   Net x position
         y2 =  59                #   Net y position
-        fieldimg = pygame.transform.flip(fieldimg, False, True)            #   Flip field image
+        linew = 716             #   Start line width
+        lineh = 5               #   Start line height
+        fieldimg = pygame.transform.flip(fieldimg, False, True)          #   Flip field image
         goalimg = pygame.transform.flip(goalimg, False, True)            #   Flip field image
         screen.blit(fieldimg, (x,y))
-        linew = 716
-        lineh = 5
         startline(linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
     else:
         x2 =  300               #   Net x position
         y2 =  490               #   Net y position
+        linew = 716             #   Start line width
+        lineh = 5               #   Start line height
         screen.blit(fieldimg, (x,y))
-        linew = 716
-        lineh = 5
         startline(linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
@@ -83,11 +83,11 @@ def startline(linex, liney, linew, lineh):
     pygame.draw.rect(screen, red, [linex, liney, linew, lineh])
 
 #   Defining kickpower as an object with power input to display the kick power on the top right corner of the window
-def kickpower(score):
+def kickpower(total_score):
     font = pygame.font.Font('./fonts/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
-    text = font.render("Score: "+str(score), True, white)
-    screen.blit(text,(680,10))
+    text = font.render("Total Score: "+str(total_score), True, white)
+    screen.blit(text,(600,10))
     screen.blit(kickmeter,(30,10))
 
 def text_objects(text, font, color):
@@ -105,6 +105,8 @@ def button(msg,x,y,w,h,ic,ac,action):
                 game_loop(action)
             elif action == "Plantar":
                 game_loop(action)
+            elif action == "Menu":
+                game_intro()
     else:
         pygame.draw.rect(screen, ic,(x,y,w,h))
 
@@ -136,13 +138,13 @@ def game_intro():
         button("Plantarflexion",550,450,100,50,red,bright_red,"Plantar")    
 
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(200)
         
 #	The game loop logic runs as long as there is no crash
 def game_loop(action):
     if action == "Dorsi":
         #   Extracting torque data from the excel file
-        file_location = "./data/Robot_Data1.xlsx"
+        file_location = "./data/Robot_data1.xlsx"
         workbook = xlrd.open_workbook(file_location)
         sheet = workbook.sheet_by_name('Trial 1')
         #   Extracting Column 7 from the sheet
@@ -168,10 +170,11 @@ def game_loop(action):
         Lmin = 100              #   Min start position position
         ymin = 67               #   Min y position of ball
         ymax = 488
+        flag = False             #   Used to detect change in gait_cycle
                 
     elif action == "Plantar":
         #   Extracting torque data from the excel file
-        file_location = "./data/Robot_Data1.xlsx"
+        file_location = "./data/Robot_data1.xlsx"
         workbook = xlrd.open_workbook(file_location)
         sheet = workbook.sheet_by_name('Trial 1')
         #   Extracting Column 7 from the sheet
@@ -189,11 +192,13 @@ def game_loop(action):
             if footswitch[i] < 0.3:
                 torque[i] = 0
                 footswitch[i] = 0
+            else: footswitch[i] = 1
         
         L = 250                 #   Initial Start position
         Lmax = 400              #   Max start positiom
         Lmin = 50               #   Min start position position
         ymax = 488              #   Max y position of ball
+        flag = True             #   Used to detect change in gait_cycle
         
         
     deltaL = 0              #   actual pixel offset for machine learning
@@ -212,7 +217,9 @@ def game_loop(action):
     max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
     index = [0]*sample_size 
     score = 0
-    flag = True             #   Used to detect change in gait_cycle
+    total_score = 0
+    score_display_max = 100
+    score_display = 0
     crashed = False         #	Initialize the boolean - 'crashed' to false
     while not crashed:									#	The game loop begins
             
@@ -222,25 +229,26 @@ def game_loop(action):
                 pygame.quit()
                 quit()
                 
-            if count == tlength-1:
-                crashed = True
-                pygame.quit()
-                quit()  
-            print event
         read_value = torque[count]
         count += 1
+        if count == tlength:
+            game_intro()
         index[gait_cycle] = gait_cycle + 1
         if flag == False:           #   Phase not under consideration: no ball movement
-            prev_value = 0          #   New gait_cycle detected; set max torque value to zero
-            score = 0
+            score_display +=1
+            if score_display > score_display_max:
+                prev_value = 0          #   New gait_cycle detected; set max torque value to zero
+                score = 0
             if footswitch[count] != 0:          #   Wait for stance phase 
                 flag = True
         elif flag == True:          #   Phase under consideration
+            score_display = 0
             if read_value>prev_value:
                 prev_value = read_value
             if footswitch[count] == 0:          #   New gait cycle detected
                 flag = False
                 gait_cycle += 1
+                total_score = total_score + score
                 print(max_torque)
                 if gait_cycle < sample_size: print(gait_cycle+1)
             if gait_cycle < sample_size:
@@ -257,6 +265,7 @@ def game_loop(action):
 #                    L = L - deltaL
 #                    if L < Lmin:
 #                        L = Lmin
+#                        alpha_sens = 0.9*alpha_sens
 #                elif average_torque > max_torque[sample_size-1]:
 #                    print('Decline')
 #                    deltaL = beta*R
@@ -264,6 +273,7 @@ def game_loop(action):
 #                    L = L + deltaL
 #                    if L > Lmax:
 #                        L = Lmax
+#                        alpha_sens = 1.1*alpha_sens
 #                elif average_torque == max_torque[sample_size-1]:
 #                    L = L
                  slope, intercept, r_value, p_value, std_err = stats.linregress(index,max_torque)
@@ -275,6 +285,7 @@ def game_loop(action):
                      L = L - deltaL
                      if L < Lmin:
                          L = Lmin
+                         alpha_sens = 0.9*alpha_sens
                  elif r_value < 0:
                      print('Decline')
                      deltaL = beta*r_value
@@ -282,6 +293,7 @@ def game_loop(action):
                      L = L - deltaL
                      if L > Lmax:
                          L = Lmax
+                         alpha_sens = 1.1*alpha_sens
                  gait_cycle = 0                      #   Reset gait_cycle
                  print(gait_cycle+1)
                  index = [0]*sample_size
@@ -316,14 +328,20 @@ def game_loop(action):
         screen.fill(screencolor)
         display_rudiments(liney,y1,action)      						
         bar(barh,action)
-        kickpower(score)
+        kickpower(total_score)
         if score == 10:
             goaltext = pygame.font.Font('./fonts/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
+        if score_display < score_display_max and flag == False:
+            scoretext = pygame.font.Font('./fonts/font.ttf',70)
+            scoreSurf, scoreRect = text_objects("Score:" +str(score), scoretext, white)
+            scoreRect.center = ((800/2),200)
+            screen.blit(scoreSurf, scoreRect)
+        button("Main Menu",675,560,100,30,red,bright_red,"Menu")
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(200)								#	Max framerate of the game
+        clock.tick()								#	Max framerate of the game
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()												#	Quit Python
