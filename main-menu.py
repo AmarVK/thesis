@@ -11,7 +11,7 @@ import os
 # =============================================================================
 # Importing pygame
 # =============================================================================
-import pygame, eztext
+import pygame
 import xlrd
 # =============================================================================
 
@@ -30,7 +30,7 @@ window.geometry("500x470+0+0")                          #   Creating a screen x 
 # =============================================================================
 # Extracting torque from excel
 # =============================================================================
-file_location = "/home/amarvk/projects/thesis/data/Robot_Data1.xlsx"
+file_location = "./data/Robot_Data1.xlsx"
 workbook = xlrd.open_workbook(file_location)
 sheet = workbook.sheet_by_name('Trial 1')
 #   Extracting Column 7 from the sheet
@@ -45,7 +45,7 @@ avg =1
 
 def game_intro():
 
-    largeText = pygame.font.Font('./data/font.ttf',115)
+    largeText = pygame.font.Font('./fonts/font.ttf',115)
     TextSurf, TextRect = text_objects("Game On!", largeText, black)
     TextRect.center = ((800/2),200)
     intro = True
@@ -87,7 +87,7 @@ def gameAction():
     if len(input3entry1.get()) == 0:
         beta = 50
     else:
-        tau = float(input3entry1.get())
+        beta = float(input3entry1.get())
     
     if len(input3entry2.get()) == 0:
         n = 5
@@ -317,7 +317,7 @@ def game_loop(action):
         bar(barh,action)
         kickpower(score)
         if score == 10:
-            goaltext = pygame.font.Font('./data/font.ttf',50)
+            goaltext = pygame.font.Font('./fonts/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
@@ -334,13 +334,13 @@ def text_objects(text, font, color):
 
 def display_rudiments(liney,y1,action):
     #   Football field image
-    fieldimg = pygame.image.load('./data/field.png')               #   load image from data folder
+    fieldimg = pygame.image.load('./images/field.png')               #   load image from data folder
     fieldimg = pygame.transform.scale(fieldimg, (716, 500))        #   scale image by pixels
     #Ball image
-    ballimg = pygame.image.load('./data/ball.png')
+    ballimg = pygame.image.load('./images/ball.png')
     ballimg = pygame.transform.scale(ballimg, (50, 50))
     # Goal image
-    goalimg = pygame.image.load('./data/goal.png')
+    goalimg = pygame.image.load('./images/goal.png')
     
     x =  42                 #   Field x position
     y = 50                  #   Field y position
@@ -386,7 +386,7 @@ def startline(linex, liney, linew, lineh):
 
 #   Defining kickpower as an object with power input to display the kick power on the top right corner of the window
 def kickpower(score):
-    font = pygame.font.Font('./data/font.ttf', 40)
+    font = pygame.font.Font('./fonts/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
     text = font.render("Score: "+str(score), True, white)
     screen.blit(text,(680,10))
@@ -401,7 +401,7 @@ def plantar():
 # =============================================================================
 # Define text and photo inputs
 # =============================================================================
-logo = PhotoImage(file='/home/amarvk/projects/thesis/images/fire-soccer.gif')
+logo = PhotoImage(file="./images/fire-soccer.gif")
 header_text = """Penalty Shooter Game !
 Robot Assisted Soccer Game"""
 input1 = """Sensitivity (pixels/Nm)"""
@@ -423,7 +423,7 @@ Suchitra Chander
 Rahul Subramonian"""
 advisor = """Advisor:"""
 advisor_name = """Dr. Anindo Roy"""
-footer_image = PhotoImage(file='/home/amarvk/projects/thesis/images/umd.gif')
+footer_image = PhotoImage(file="./images/umd.gif")
 # =============================================================================
 # Setting up the grid UI
 # =============================================================================
@@ -489,15 +489,15 @@ pygame.display.set_caption('Game On!')      				#   Set the current window capti
 clock = pygame.time.Clock()						           	#	Create an object - 'clock' to help track time
 
 #   Football field image
-fieldimg = pygame.image.load('./data/field.png')               #   load image from data folder
+fieldimg = pygame.image.load('./images/field.png')               #   load image from data folder
 fieldimg = pygame.transform.scale(fieldimg, (716, 500))        #   scale image by pixels
-startlineimg = pygame.image.load('./data/startline.png')
+startlineimg = pygame.image.load('./images/startline.png')
 startlineimg = pygame.transform.scale(startlineimg,(716,76))
 #Ball image
-ballimg = pygame.image.load('./data/ball.png')
+ballimg = pygame.image.load('./images/ball.png')
 ballimg = pygame.transform.scale(ballimg, (50, 50))
 # Goal image
-goalimg = pygame.image.load('./data/goal.png')
+goalimg = pygame.image.load('./images/goal.png')
 
 
 
