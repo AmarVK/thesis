@@ -13,6 +13,7 @@ import os
 # =============================================================================
 import pygame
 import xlrd
+from scipy import stats
 # =============================================================================
 
 # Deffine Fonts
@@ -230,15 +231,19 @@ def game_loop():
         screen.fill(screencolor)
         display_rudiments(liney,y1)      						
         bar(barh)
-        kickpower(score)
+        kickpower(total_score)
         if score == 10:
             goaltext = pygame.font.Font('./fonts/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
-        
+        if score_display < score_display_max and flag == False:
+            scoretext = pygame.font.Font('./fonts/font.ttf',70)
+            scoreSurf, scoreRect = text_objects("Score:" +str(score), scoretext, white)
+            scoreRect.center = ((800/2),200)
+            screen.blit(scoreSurf, scoreRect)
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(2000)								#	Max framerate of the game
+        clock.tick()								#	Max framerate of the game
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()	
@@ -284,11 +289,11 @@ def startline(linex, liney, linew, lineh):
     pygame.draw.rect(screen, red, [linex, liney, linew, lineh])
 
 #   Defining kickpower as an object with power input to display the kick power on the top right corner of the window
-def kickpower(score):
+def kickpower(total_score):
     font = pygame.font.Font('./fonts/font.ttf', 40)
     kickmeter = font.render('Kickmeter',1,white)
-    text = font.render("Score: "+str(score), True, white)
-    screen.blit(text,(680,10))
+    text = font.render("Total Score: "+str(total_score), True, white)
+    screen.blit(text,(600,10))
     screen.blit(kickmeter,(30,10))
 
 # =============================================================================
