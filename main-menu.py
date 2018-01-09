@@ -24,22 +24,25 @@ FONT = ("Verdana",10)
 # =============================================================================
 window = Tk()                                           #   Creating a Tkinter object
 window.title("Penalty Shooter")                         #   Creating a title
-window.geometry("500x470+0+0")                          #   Creating a screen x -> the dimensions and +gives the initial position location 
+window.geometry("600x470+0+0")                          #   Creating a screen x -> the dimensions and +gives the initial position location 
 # window.wm_iconbitmap('ball.xbm')                      #   TODO Fix this
 
-
+global alpha
+global tau
+global beta
+global n
+global avg
 alpha = 0
 tau = 0
 beta = 0
 n = 3
-avg =1
+avg =-1
 
 def gameAction():
     global alpha
     global tau
     global beta
     global n
-    
     if len(input1entry.get()) == 0:
         alpha = 25
     else:
@@ -58,12 +61,13 @@ def gameAction():
     if len(input3entry2.get()) == 0:
         n = 5
     else:
-        n = float(input3entry2.get())
+        n = int(input3entry2.get())
         
      
     game_loop()
 
 def mlParams1():        
+    global avg
     input3Text1 = Label(window,text = input3, font = FONT).grid(row=8, column =0, sticky=W)
     input3entry1.grid(row=9, column =0, sticky=W)
     
@@ -73,7 +77,8 @@ def mlParams1():
     avg =1
     return avg
     
-def mlParams2():        
+def mlParams2():
+    global avg        
     input3Text1 = Label(window,text = input3, font = FONT).grid(row=8, column =0, sticky=W)
     input3entry1.grid(row=9, column =0, sticky=W)
     
@@ -99,7 +104,7 @@ def game_loop():
         if torque[i] > 0:
             torque[i] = 0.00
         else:
-            torque[i] = (-1)*torque[i]
+            torque[i] = (-1)*(torque[i] + tau)
     for i in range(0,tlength):
         if footswitch[i] < 0.3:
             torque[i] = 0
@@ -145,7 +150,9 @@ def game_loop():
         read_value = torque[count]
         count += 1
         if count == tlength:
-            game_intro()
+            crashed = True	
+            pygame.quit()
+            quit()
         index[gait_cycle] = gait_cycle + 1
         if flag == False:           #   Phase not under consideration: no ball movement
             score_display +=1
