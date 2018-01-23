@@ -173,26 +173,6 @@ def game_loop(action):
         flag = False             #   Used to detect change in gait_cycle
                 
     elif action == "Plantar":
-        #   Extracting torque data from the excel file
-        file_location = "./data/Robot_data1.xlsx"
-        workbook = xlrd.open_workbook(file_location)
-        sheet = workbook.sheet_by_name('Trial 1')
-        #   Extracting Column 7 from the sheet
-        torque = sheet.col_values(6)
-        footswitch = sheet.col_values(19)
-        
-        #   Extracting meaningful values of torque
-        tlength = len(torque)
-        for i in range(0,tlength):
-            if torque[i] > 0:
-                torque[i] = 0.00
-            else:
-                torque[i] = (-1)*torque[i]
-        for i in range(0,tlength):
-            if footswitch[i] < 0.3:
-                torque[i] = 0
-                footswitch[i] = 0
-            else: footswitch[i] = 1
         
         L = 250                 #   Initial Start position
         Lmax = 400              #   Max start positiom
@@ -201,6 +181,9 @@ def game_loop(action):
         flag = True             #   Used to detect change in gait_cycle
         
         
+    footswitch = []
+    torque = []
+    
     deltaL = 0              #   actual pixel offset for machine learning
     beta = 50               #   Default pixel offset
     liney = L               #   Initial Start-line y position (same as Start position)
@@ -229,11 +212,24 @@ def game_loop(action):
                 pygame.quit()
                 quit()
                 
+        footswitch_values = float (raw_input())
+        torque_values = float(raw_input())
+        footswitch.append(footswitch_values)
+        torque.append(torque_values)
+        
+        if torque[count] > 0:
+            torque[count] = 0.00
+        else:
+            torque[count] = (-1)*torque[count]
+
+        if footswitch[count] < 0.3:
+            torque[count] = 0
+            footswitch[count] = 0
+        else: footswitch[count] = 1
+        
         read_value = torque[count]
-        count += 1
-        if count == tlength:
-            game_intro()
         index[gait_cycle] = gait_cycle + 1
+        
         if flag == False:           #   Phase not under consideration: no ball movement
             score_display +=1
             if score_display > score_display_max:
@@ -340,10 +336,12 @@ def game_loop(action):
             scoreRect.center = ((800/2),200)
             screen.blit(scoreSurf, scoreRect)
         button("Main Menu",675,560,100,30,red,bright_red,"Menu")
+        count += 1
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick()								#	Max framerate of the game
+#        clock.tick()								#	Max framerate of the game
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()												#	Quit Python
-action = "None"	
-game_intro()
+action = "Plantar"	
+#game_intro()
+game_loop(action)

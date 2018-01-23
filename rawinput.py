@@ -13,5 +13,7 @@ while flag == 1:
     footswitch = raw_input("Footswitch:  ")
     torque = raw_input("Torque:  ")
     footswitch_values.append(footswitch)
+    print footswitch_values[count]
     torque_values.append(torque)
+    print torque_values[count]
     count += 1
