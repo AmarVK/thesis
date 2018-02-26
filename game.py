@@ -143,28 +143,7 @@ def game_intro():
 #	The game loop logic runs as long as there is no crash
 def game_loop(action):
     if action == "Dorsi":
-        #   Extracting torque data from the excel file
-        file_location = "./data/Robot_data1.xlsx"
-        workbook = xlrd.open_workbook(file_location)
-        sheet = workbook.sheet_by_name('Trial 1')
-        #   Extracting Column 7 from the sheet
-        torque = sheet.col_values(6)
-        footswitch = sheet.col_values(19)
-        
-        #   Extracting meaningful values of torque
-        tlength = len(torque)
-        for i in range(0,tlength):
-            if torque[i] < 0:
-                torque[i] = 0.00
-            else:
-                torque[i] = torque[i]
-        for i in range(0,tlength):
-            if footswitch[i] > 0.3:
-                torque[i] = 0
-                footswitch[i] = 0
-            else:
-                footswitch[i] = 1
-                
+                       
         L = 300                 #   Initial Start position
         Lmax = 550              #   Max start positiom
         Lmin = 100              #   Min start position position

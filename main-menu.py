@@ -89,55 +89,36 @@ def mlParams2():
 
 
 def game_loop():
-                
-    #   Extracting torque data from the excel file
-    file_location = "./data/Robot_Data1.xlsx"
-    workbook = xlrd.open_workbook(file_location)
-    sheet = workbook.sheet_by_name('Trial 1')
-    #   Extracting Column 7 from the sheet
-    torque = sheet.col_values(6)
-    footswitch = sheet.col_values(19)
-    
-    #   Extracting meaningful values of torque
-    tlength = len(torque)
-    for i in range(0,tlength):
-        if torque[i] > 0:
-            torque[i] = 0.00
-        else:
-            torque[i] = (-1)*(torque[i] + tau)
-    for i in range(0,tlength):
-        if footswitch[i] < 0.3:
-            torque[i] = 0
-            footswitch[i] = 0
-        else: footswitch[i] = 1
     
     L = 250                 #   Initial Start position
-    Lmax = 400              #   Max start positiom
+    Lmax = 400              #   Max start position
     Lmin = 50               #   Min start position position
     ymax = 488              #   Max y position of ball
     flag = True             #   Used to detect change in gait_cycle
- 
+        
+        
+    footswitch = []
+    torque = []
+    
     deltaL = 0              #   actual pixel offset for machine learning
+    beta = 50               #   Default pixel offset
     liney = L               #   Initial Start-line y position (same as Start position)
     y1 = L                  #   Initial Ball y position (same as Initial Start position)
     y1actual = 0            #   Initial y value wrt torque profile
-    alpha_sens = alpha
+    alpha_sens = 41.66      #   Sensitivity from dialog box (pixels/Nm)  
     barh = 2                #   Power bar height in pixels
     count = 0               #   Used for indexing data from .xlsx file
     read_value = 0          #   Initializing current torque value
     prev_value = 0          #   Initializing max torque value in the current gait cycle
     gait_cycle = 0          #   Initializing gait_cycle count
     print(gait_cycle+1)
-    
-    sample_size = n                         #   Setting the window size for machine learning
+    sample_size = 7         #   Setting the window size for machine learning
     max_torque = [0]*sample_size            #   Initializing an empty list of length= sample_size to store max torque values of every iteration
     index = [0]*sample_size 
-    
     score = 0
     total_score = 0
     score_display_max = 100
     score_display = 0
-    
     crashed = False         #	Initialize the boolean - 'crashed' to false
     while not crashed:									#	The game loop begins
             
@@ -147,13 +128,24 @@ def game_loop():
                 pygame.quit()
                 quit()
                 
+        footswitch_values = float (raw_input())
+        torque_values = float(raw_input())
+        footswitch.append(footswitch_values)
+        torque.append(torque_values)
+        
+        if torque[count] > 0:
+            torque[count] = 0.00
+        else:
+            torque[count] = (-1)*torque[count]
+
+        if footswitch[count] < 0.3:
+            torque[count] = 0
+            footswitch[count] = 0
+        else: footswitch[count] = 1
+        
         read_value = torque[count]
-        count += 1
-        if count == tlength:
-            crashed = True	
-            pygame.quit()
-            quit()
         index[gait_cycle] = gait_cycle + 1
+        
         if flag == False:           #   Phase not under consideration: no ball movement
             score_display +=1
             if score_display > score_display_max:
@@ -233,10 +225,9 @@ def game_loop():
         if y1+50 > 413 and y1+50 < 490: score = 5
         if y1+50 > 490: score = 10
         barh = 400*(y1actual-L)/(ymax-L)
-        
         liney = L
         screen.fill(screencolor)
-        display_rudiments(liney,y1)      						
+        display_rudiments(liney,y1)     						
         bar(barh)
         kickpower(total_score)
         if score == 10:
@@ -249,6 +240,8 @@ def game_loop():
             scoreSurf, scoreRect = text_objects("Score:" +str(score), scoretext, white)
             scoreRect.center = ((800/2),200)
             screen.blit(scoreSurf, scoreRect)
+        button("Main Menu",675,560,100,30,red,bright_red,"Menu")
+        count += 1
         pygame.display.update()						#	Updates the display screen only in the places where the event has changed
         clock.tick()								#	Max framerate of the game
     
