@@ -1,7 +1,6 @@
 clc
 clear all
-close all
-robot_data = xlsread('trial3','sheet1','A1:U2389','basic');
+robot_data = xlsread('dorsi','book','A1:U6359','basic');
 %9889
 % for i = 1: length(robot_data)
 %     if robot_data(i,7) > 0
@@ -23,8 +22,8 @@ plot(i,10*robot_data(:,3),'r',i,robot_data(:,7),'b',i, robot_data(:,20),'k')
 figure(2)
 plot(robot_data(:,7),'b')
 figure(3)
-plot(i,robot_data(:,3),'r')
+plot(i,robot_data(:,7),'b',i,robot_data(:,20),'k')
 figure(4)
-plot(diff(diff(robot_data(:,3))),'b')
+plot(diff(robot_data(:,5)),'b')
 figure(5)
 plot(i,robot_data(:,20),'b')
