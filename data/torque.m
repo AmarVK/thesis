@@ -1,7 +1,7 @@
 clc
 clear all
 close all
-robot_data = xlsread('dorsiflexion overground trial 2','book','A1:U8763','basic');
+robot_data = xlsread('Robot_Data1','Trial 1','A1:U9889','basic');
 i =(1/200):(1/200):(length(robot_data)/200); %time
 A = (diff(robot_data(:,5))); %estimated torque
 A = [A(1);A];
@@ -30,7 +30,8 @@ for j = 1:1:length(robot_data)
          A1(j) = robot_data(j,7);
     end
 end
-% A1 = robot_data(:,7)-stictionvalues(robot_data(:,5));
+% in = [robot_data(:,3),robot_data(:,5),A];
+% A1 = robot_data(:,7)-stictionvalue(in);
 figure(2)
 plot(i,10*A,'b',i,A1,'r',i,robot_data(:,7),'g')
 grid on
