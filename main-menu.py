@@ -23,24 +23,24 @@ FONT = ("Verdana",10)
 # =============================================================================
 window = Tk()                                           #   Creating a Tkinter object
 window.title("Penalty Shooter")                         #   Creating a title
-window.geometry("500x470+0+0")                          #   Creating a screen x -> the dimensions and +gives the initial position location 
+window.geometry("500x550+0+0")                          #   Creating a screen x -> the dimensions and +gives the initial position location 
 # window.wm_iconbitmap('ball.xbm')                      #   TODO Fix this
 
 
 # =============================================================================
 # Extracting torque from excel
 # =============================================================================
-file_location = "/home/amarvk/projects/thesis/data/Robot_Data1.xlsx"
-workbook = xlrd.open_workbook(file_location)
-sheet = workbook.sheet_by_name('Trial 1')
-#   Extracting Column 7 from the sheet
-torque = sheet.col_values(6)
-footswitch = sheet.col_values(19)
-alpha = 0
-tau = 0
-beta = 0
-n = 3
-action = "Plantar"
+# file_location = "/home/amarvk/projects/thesis/data/Robot_Data1.xlsx"
+# workbook = xlrd.open_workbook(file_location)
+# sheet = workbook.sheet_by_name('Trial 1')
+# #   Extracting Column 7 from the sheet
+# torque = sheet.col_values(6)
+# footswitch = sheet.col_values(19)
+# alpha = 0
+# tau = 0
+# beta = 0
+# n = 3
+action = 1
 avg =1
 
 def game_intro():
@@ -66,75 +66,86 @@ def game_intro():
         button("Plantarflexion",550,450,100,50,red,bright_red,"Plantar")    
 
         pygame.display.update()
-        clock.tick(2000)
+        clock.tick(20000)
 
-def gameAction():
+def gameAction(action):
+
     global alpha
     global tau
     global beta
     global n
+    global L                  #   Initial Start position
+    global Lmax              #   Max start positiom
+    global Lmin              #   Min start position position
+    global ymin               #   Min y position of ball
+    global ymax
+    global flag             #   Used to detect change in gait_cycle
     
     if len(input1entry.get()) == 0:
         alpha = 25
     else:
-        alpha = float(input1entry.get())
+        # alpha = float(input1entry.get())
+        alpha = 25
         
     if len(input2entry.get()) == 0:
         tau = 0.75
     else:
-        tau = float(input2entry.get())
+        # tau = float(input2entry.get())
+        tau = 0.75
         
     if len(input3entry1.get()) == 0:
         beta = 50
     else:
-        tau = float(input3entry1.get())
+        # tau = float(input3entry1.get())
+        beta = 50
     
     if len(input3entry2.get()) == 0:
         n = 5
     else:
-        n = float(input3entry2.get())
+        # n = int(input3entry2.get())
+        n = 5
         
-     
+    
     game_loop(action)
 
 def mlParams1():        
-    input3Text1 = Label(window,text = input3, font = FONT).grid(row=8, column =0, sticky=W)
-    input3entry1.grid(row=9, column =0, sticky=W)
+    input3Text1 = Label(window,text = input3, font = FONT).grid(row=14, column =0, sticky=W)
+    input3entry1.grid(row=15, column =0, sticky=W)
     
-    input3Text2 = Label(window,text = input5, font = FONT).grid(row=8, column =1, sticky=W)
-    input3entry2.grid(row=9, column =1, sticky=W)
+    input3Text2 = Label(window,text = input5, font = FONT).grid(row=14, column =1, sticky=W)
+    input3entry2.grid(row=15, column =1, sticky=W)
  
     avg =1
-    return avg
+    # return avg
     
 def mlParams2():        
-    input3Text1 = Label(window,text = input3, font = FONT).grid(row=8, column =0, sticky=W)
-    input3entry1.grid(row=9, column =0, sticky=W)
+    input3Text1 = Label(window,text = input3, font = FONT).grid(row=14, column =0, sticky=W)
+    input3entry1.grid(row=15, column =0, sticky=W)
     
-    input3Text2 = Label(window,text = input5, font = FONT).grid(row=8, column =1, sticky=W)
-    input3entry2.grid(row=9, column =1, sticky=W)
+    input3Text2 = Label(window,text = input5, font = FONT).grid(row=14, column =1, sticky=W)
+    input3entry2.grid(row=15, column =1, sticky=W)
     avg =0
-    return avg
+    # return avg
     
 # =============================================================================
 # Extracting meaningful torque inputs
 # =============================================================================
 #   Extracting meaningful values of torque
-tlength = len(torque)
-for i in range(0,tlength):
-    if torque[i] > -tau:
-        torque[i] = 0.00
-    else:
-        torque[i] = (-1)*torque[i]
-for i in range(0,tlength):
-    if footswitch[i] < 0.3:
-        torque[i] = 0
-        footswitch[i] = 0
+# tlength = len(torque)
+# for i in range(0,tlength):
+#     if torque[i] > -tau:
+#         torque[i] = 0.00
+#     else:
+#         torque[i] = (-1)*torque[i]
+# for i in range(0,tlength):
+#     if footswitch[i] < 0.3:
+#         torque[i] = 0
+#         footswitch[i] = 0
 
 
 
 def game_loop(action):
-    if action == "Dorsi":
+    if action == 1:
         #   Extracting torque data from the excel file
         file_location = "./data/Robot_Data1.xlsx"
         workbook = xlrd.open_workbook(file_location)
@@ -317,13 +328,13 @@ def game_loop(action):
         bar(barh,action)
         kickpower(score)
         if score == 10:
-            goaltext = pygame.font.Font('./data/font.ttf',50)
+            goaltext = pygame.font.Font('./fonts/font.ttf',50)
             GoalSurf, GoalRect = text_objects("GOAL!", goaltext, white)
             GoalRect.center = ((800/2),575)
             screen.blit(GoalSurf, GoalRect)
         
-        pygame.display.update()						#	Updates the display screen only in the places where the event has changed
-        clock.tick(2000)								#	Max framerate of the game
+        pygame.display.flip()						#	Updates the display screen only in the places where the event has changed
+        clock.tick(20000)								#	Max framerate of the game
     
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()	
@@ -347,7 +358,7 @@ def display_rudiments(liney,y1,action):
     linex = x               #   Start-line x position (same as field)
     x1 = 376                #   Initial Ball x position (center of the field)
     
-    if action == "Dorsi":
+    if action == 1:
         x2 =  300               #   Net x position
         y2 =  490               #   Net y position
         linew = 716             #   Start line width
@@ -393,10 +404,12 @@ def kickpower(score):
     screen.blit(kickmeter,(30,10))
 
 def dorsi():
-    action = "Plantar"
+    action = "Dorsi"
+    return action
     
 def plantar():
     action = "Plantar"
+    return action
 
 # =============================================================================
 # Define text and photo inputs
@@ -410,6 +423,8 @@ input3 = """Pixel increment"""
 input4 = """Machine Learning"""
 input5 = """Number of Cycles"""
 input6 = """Game Mode"""
+input7 = """Controller Stiffness - (Nm/radian)"""
+input8 = """Controller Damping - B(Nms/radian)"""
 checkbox1 = """None"""
 checkbox2 = """Average"""
 checkbox3 = """Regression"""
@@ -438,37 +453,47 @@ input2Text = Label(window,text = input2, font = FONT).grid(row=3, column =0, sti
 input2entry = ttk.Entry(window)
 input2entry.grid(row=3, column =1, sticky=W)
 
-# =============================================================================
+
 # input3Text = Label(window,text = input3, font = FONT).grid(row=4, column =0, sticky=W)
 # input3entry = ttk.Entry(window)
 # input3entry.grid(row=4, column =1, sticky=W)
-# =============================================================================
+
+input7Text = Label(window,text = input7, font = FONT).grid(row=5, column =0, sticky=W)
+input7entry = ttk.Entry(window)
+input7entry.grid(row=5, column =1, sticky=W)
+
+input8Text = Label(window,text = input8, font = FONT).grid(row=6, column =0, sticky=W)
+input8entry = ttk.Entry(window)
+input8entry.grid(row=6, column =1, sticky=W)
+
+
+
 btn2 = StringVar()
-input5Text = Label(window,text = input6, font = FONT).grid(row=5, column =0, sticky=W)
-input5entry = ttk.Radiobutton(window, text=checkbox4, variable = btn2 , value =1).grid(row=5, column =1, sticky =W)
-input5entry1 = ttk.Radiobutton(window, text=checkbox5, variable = btn2 , value =2).grid(row=6, column =1, sticky =W)
+input5Text = Label(window,text = input6, font = FONT).grid(row=7, column =0, sticky=W)
+input5entry = ttk.Radiobutton(window, text=checkbox4, variable = btn2 , value =1).grid(row=8, column =1, sticky =W)
+input5entry1 = ttk.Radiobutton(window, text=checkbox5, variable = btn2 , value =2).grid(row=9, column =1, sticky =W)
 
 btn = StringVar()
-input4Text = Label(window,text = input4, font = FONT).grid(row=7, column =0, sticky=W)
-input4entry1 = ttk.Radiobutton(window, text=checkbox1, variable = btn , value =1).grid(row=7, column =1, sticky =W)
+input4Text = Label(window,text = input4, font = FONT).grid(row=10, column =0, sticky=W)
+input4entry1 = ttk.Radiobutton(window, text=checkbox1, variable = btn , value =1).grid(row=11, column =1, sticky =W)
 
 
-input4entry2 = ttk.Radiobutton(window, text=checkbox2, variable = btn, value =2,command =lambda: mlParams1()).grid(row=8, column =1, sticky =W)
+input4entry2 = ttk.Radiobutton(window, text=checkbox2, variable = btn, value =2,command =lambda: mlParams1()).grid(row=12, column =1, sticky =W)
 
 
-input4entry3 = ttk.Radiobutton(window, text=checkbox3, variable = btn, value =3,command =lambda: mlParams2()).grid(row=9, column =1, sticky =W)
-gameButton = Button(window, text = game_button, command =lambda: gameAction()).grid (row = 10,column = 0, columnspan =2)
+input4entry3 = ttk.Radiobutton(window, text=checkbox3, variable = btn, value =3,command =lambda: mlParams2()).grid(row=13, column =1, sticky =W)
+gameButton = Button(window, text = game_button, command =lambda: gameAction(action)).grid (row = 16,column = 0, columnspan =2)
 # =============================================================================
 # Setting up the footer UI
 # =============================================================================
-divider = Label(window,text = blanker, font = FONT).grid(row=11, column = 0, columnspan =2, sticky = N+E+W+S)
-teamText = Label(window,text = team, font = FONT).grid(row=12, column = 0, columnspan =2, sticky = N+E+W+S)
-teamMembers = Label(window,text = team_members, font = FONT).grid(row=13, column = 0, columnspan =2, sticky = N+E+W+S)
-divider = Label(window,text = blanker, font = FONT).grid(row=14, column = 0, columnspan =2, sticky = N+E+W+S)
-advisorText = Label(window,text = advisor, font = FONT).grid(row=15, column = 0, columnspan =2, sticky = N+E+W+S)
-advisorName = Label(window,text = advisor_name, font = FONT).grid(row=16, column = 0, columnspan =2, sticky = N+E+W+S)
-bottomLogo = Label(window, image = footer_image).grid(row =17, column = 0, columnspan = 2, sticky = W+E+N+S)
-divider = Label(window,text = blanker, font = FONT).grid(row=18, column = 0, columnspan =2, sticky = N+E+W+S)
+divider = Label(window,text = blanker, font = FONT).grid(row=17, column = 0, columnspan =2, sticky = N+E+W+S)
+teamText = Label(window,text = team, font = FONT).grid(row=18, column = 0, columnspan =2, sticky = N+E+W+S)
+teamMembers = Label(window,text = team_members, font = FONT).grid(row=19, column = 0, columnspan =2, sticky = N+E+W+S)
+divider = Label(window,text = blanker, font = FONT).grid(row=20, column = 0, columnspan =2, sticky = N+E+W+S)
+advisorText = Label(window,text = advisor, font = FONT).grid(row=21, column = 0, columnspan =2, sticky = N+E+W+S)
+advisorName = Label(window,text = advisor_name, font = FONT).grid(row=22, column = 0, columnspan =2, sticky = N+E+W+S)
+bottomLogo = Label(window, image = footer_image).grid(row =23, column = 0, columnspan = 2, sticky = W+E+N+S)
+divider = Label(window,text = blanker, font = FONT).grid(row=24, column = 0, columnspan =2, sticky = N+E+W+S)
 input3entry1 = ttk.Entry(window)
 input3entry2 = ttk.Entry(window)
 

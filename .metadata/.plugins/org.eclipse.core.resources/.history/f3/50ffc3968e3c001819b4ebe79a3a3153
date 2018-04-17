@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:configuration="http://www.eclipse.org/papyrus/infra/viewpoints/configuration" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <notation:Diagram xmi:id="_BAUC4DyOEeio2adex5hsYA" type="CompositeStructure" name="SysML 1.4 Internal Block" measurementUnit="Pixel">
+    <children xmi:type="notation:Shape" xmi:id="_BA1nUDyOEeio2adex5hsYA" type="Class_Shape">
+      <children xmi:type="notation:DecorationNode" xmi:id="_BA7G4DyOEeio2adex5hsYA" type="Class_NameLabel"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_BA7t8DyOEeio2adex5hsYA" type="Class_FloatingNameLabel">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_BA7t8TyOEeio2adex5hsYA" y="5"/>
+      </children>
+      <children xmi:type="notation:BasicCompartment" xmi:id="_BA7t8jyOEeio2adex5hsYA" type="Class_StructureCompartment">
+        <styles xmi:type="notation:TitleStyle" xmi:id="_BA7t8zyOEeio2adex5hsYA"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BA7t9DyOEeio2adex5hsYA"/>
+      </children>
+      <element xmi:type="uml:Class" href="model.uml#_A6mccDyOEeio2adex5hsYA"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BA1nUTyOEeio2adex5hsYA" x="40" y="40" width="500" height="250"/>
+    </children>
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_BAUC4TyOEeio2adex5hsYA" name="diagram_compatibility_version" stringValue="1.2.0"/>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_BAUC4jyOEeio2adex5hsYA"/>
+    <styles xmi:type="style:PapyrusViewStyle" xmi:id="_BAUC4zyOEeio2adex5hsYA">
+      <owner xmi:type="uml:Model" href="model.uml#_AvFI8DyOEeio2adex5hsYA"/>
+      <configuration xmi:type="configuration:PapyrusDiagram" href="platform:/plugin/org.eclipse.papyrus.sysml14.diagram.internalblock/resources/configuration/internalBlockDiagram.configuration#_ZrBf4JaBEeS8eNvSwD0lgA"/>
+    </styles>
+    <element xmi:type="uml:Class" href="model.uml#_A6mccDyOEeio2adex5hsYA"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_BBlOMDyOEeio2adex5hsYA" type="PapyrusUMLClassDiagram" name="SysML 1.4 Block Definition" measurementUnit="Pixel">
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_BBlOMTyOEeio2adex5hsYA" name="diagram_compatibility_version" stringValue="1.2.0"/>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_BBlOMjyOEeio2adex5hsYA"/>
+    <styles xmi:type="style:PapyrusViewStyle" xmi:id="_BBlOMzyOEeio2adex5hsYA">
+      <owner xmi:type="uml:Model" href="model.uml#_AvFI8DyOEeio2adex5hsYA"/>
+      <configuration xmi:type="configuration:PapyrusDiagram" href="platform:/plugin/org.eclipse.papyrus.sysml14.diagram.blockdefinition/resources/configuration/blockDefinitionDiagram.configuration#_ZrBf4JaBEeS8eNvSwD0lgA"/>
+    </styles>
+    <element xmi:type="uml:Model" href="model.uml#_AvFI8DyOEeio2adex5hsYA"/>
+  </notation:Diagram>
+</xmi:XMI>
