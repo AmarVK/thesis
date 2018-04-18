@@ -150,5 +150,12 @@ def game_loop(action):
     pygame.quit()										#	Unitialize all pygame modules (pygame destructor)
     quit()												#	Quit Python
 
+print(raw_input())
+print(raw_input())
+print(raw_input())
+print(raw_input())
+print(raw_input())
+print(raw_input())
+print(raw_input())
 action = "Dorsi"        
 game_loop(action)
