@@ -38,7 +38,7 @@ def display_rudiments(screen,liney,y1,action):
         fieldimg = pygame.transform.flip(fieldimg, False, True)          #   Flip field image
         goalimg = pygame.transform.flip(goalimg, False, True)            #   Flip field image
         screen.blit(fieldimg, (x,y))
-        startline(linex, liney+25, linew, lineh)
+        startline(screen,linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
     else:
@@ -47,11 +47,10 @@ def display_rudiments(screen,liney,y1,action):
         linew = 716             #   Start line width
         lineh = 5               #   Start line height
         screen.blit(fieldimg, (x,y))
-        startline(linex, liney+25, linew, lineh)
+        startline(screen,linex, liney+25, linew, lineh)
         screen.blit(ballimg, (x1,y1))
         screen.blit(goalimg, (x2,y2))
         
-    button("Main Menu",675,560,100,30,red,bright_red,"Menu")
 
 #   Defining bar as an object with multiple inputs
 def bar(screen,barh,action):
@@ -91,23 +90,22 @@ def button(screen,msg,x,y,w,h,ic,ac,action):
 
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(screen, ac,(x,y,w,h))
-        if click[0] == 1 and action != "None":
-            if action == "Dorsi":
-                return action
-            elif action == "Plantar":
-                return action
-            elif action == "Menu":
-                return action
-        else:
+        textSurf, textRect = text_objects(msg, smallText, black)
+        textRect.center = ( (x+(w/2)), (y+(h/2)) )
+        screen.blit(textSurf, textRect)
+        if click[0] == 1:
             return action
+        else:
+            return "None"
     else:
         pygame.draw.rect(screen, ic,(x,y,w,h))
+        textSurf, textRect = text_objects(msg, smallText, black)
+        textRect.center = ( (x+(w/2)), (y+(h/2)) )
+        screen.blit(textSurf, textRect)
+        return "None"
 
-    textSurf, textRect = text_objects(msg, smallText, black)
-    textRect.center = ( (x+(w/2)), (y+(h/2)) )
-    screen.blit(textSurf, textRect)
     
-def intro(screen,action):
+def intro(screen):
     largeText = pygame.font.Font('./fonts/font.ttf',115)
     TextSurf, TextRect = text_objects("Game On!", largeText, black)
     TextRect.center = ((800/2),200)
@@ -115,18 +113,23 @@ def intro(screen,action):
     # update txtbx
     screen.blit(TextSurf, TextRect)
 
-    action = button(screen,"Dorsiflexion",150,450,100,50,green,bright_green,"Dorsi")
-    if action != "None":
-        return action
-    action = button(screen,"Plantarflexion",550,450,100,50,red,bright_red,"Plantar")
-    if action != "None":
-        return action
+    action1 = button(screen,"Dorsiflexion",150,450,100,50,green,bright_green,"Dorsi")
+    action2 = button(screen,"Plantarflexion",550,450,100,50,red,bright_red,"Plantar")
+    if action1 != "None":
+        return action1
+    if action2 != "None":
+        return action2
+    if action1 == "None" and action2 == "None":
+        return "None"
+    
 
 def game(screen,liney,y1,action,barh,total_score):
     screen.fill(screencolor)
-    display_rudiments(liney,y1,action)      						
-    bar(barh,action)
-    kickpower(total_score)
+    display_rudiments(screen,liney,y1,action)      						
+    bar(screen,barh,action)
+    kickpower(screen,total_score)
+    action1 = button(screen,"Main Menu",675,560,100,30,red,bright_red,"Menu")
+    return action1
     
 def goal(screen):
     goaltext = pygame.font.Font('./fonts/font.ttf',50)
